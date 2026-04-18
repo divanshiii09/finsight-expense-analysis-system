@@ -1,55 +1,139 @@
-.income-container {
-  text-align: center;
-  color: #ffffff;
+/* =========================
+   PAGE BACKGROUND
+========================= */
+
+.income-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #eef2ff 0%,
+    #f8fafc 40%,
+    #e0ecff 100%
+  );
+
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* =========================
+   WRAPPER (CENTER FIX)
+========================= */
+
+.income-wrapper {
   width: 100%;
-  padding: 40px 20px;
+  max-width: 1000px;
+  text-align: center;
 }
 
-.income-title {
-  font-size: 36px;
+/* =========================
+   HEADER (FIX TYPOGRAPHY)
+========================= */
+
+.income-header h1 {
+  font-size: 34px;
   font-weight: 700;
+  margin-bottom: 8px;
+
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.income-subtitle {
-  margin-top: 8px;
-  opacity: 0.9;
+.income-header p {
+  color: #64748b;
+  font-size: 15px;
+  margin-bottom: 40px;
 }
+
+/* =========================
+   GRID
+========================= */
 
 .income-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  max-width: 900px;
-  margin: 50px auto;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
 }
+
+/* =========================
+   CARD (MATCH DASHBOARD)
+========================= */
 
 .income-card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(14px);
+
+  border-radius: 20px;
   padding: 30px;
-  border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid #dcdcdc;
-  color: grey;
+
+  border: 1px solid rgba(30, 60, 114, 0.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
+/* 🔥 HOVER EFFECT */
 .income-card:hover {
-  transform: translateY(-8px);
-  background: #f4f7fb;
+  transform: translateY(-6px) scale(1.02);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  box-shadow: 0 15px 40px rgba(59, 130, 246, 0.15);
 }
+
+/* =========================
+   ICON
+========================= */
 
 .income-icon {
-  font-size: 32px;
-  margin-bottom: 10px;
+  font-size: 40px;
+  margin-bottom: 14px;
 }
 
-.income-name {
+/* =========================
+   TITLE
+========================= */
+
+.income-card h3 {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   color: #1e3c72;
+  margin-bottom: 6px;
 }
 
-.income-desc {
+/* =========================
+   TEXT
+========================= */
+
+.income-card p {
   font-size: 14px;
-  color: grey;
+  color: #64748b;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+.dashboard-main.dark .income-page {
+  background: linear-gradient(
+    135deg,
+    #0b1220,
+    #0f172a,
+    #111827
+  );
+}
+
+.dashboard-main.dark .income-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148,163,184,0.15);
+}
+
+.dashboard-main.dark .income-card h3 {
+  color: #93c5fd;
+}
+
+.dashboard-main.dark .income-card p {
+  color: #94a3b8;
 }

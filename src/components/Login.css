@@ -1,144 +1,141 @@
-/* Global Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+/* =========================
+   LOGIN PAGE CENTERING
+========================= */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(to bottom right, #ffffff, #f4f7fb);
+  font-family: "Segoe UI", sans-serif;
 }
 
-body {
-    height: 100vh;
-    background: #f4f7fb;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* =========================
+   LOGIN CARD
+========================= */
+
+
+/* =========================
+   WIDER PREMIUM LOGIN CARD
+========================= */
+
+.login-card {
+  width: 100%;
+  max-width: 720px;
+  padding: 50px 60px;  /* increased padding */
+
+  border-radius: 20px;
+  backdrop-filter: blur(14px);
+
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(30, 60, 114, 0.15);
+
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+
+  transition: 0.25s ease;
 }
 
-/* Main Layout */
-.main-container {
-    width: 90%;
-    max-width: 1100px;
-    height: 600px;
-    display: flex;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-    background: white;
+.login-card:hover {
+  transform: translateY(-4px);
 }
 
-/* Left Panel */
-.left-panel {
-    flex: 1;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px;
+/* =========================
+   HEADER
+========================= */
+
+.login-header {
+  text-align: center;
+  margin-bottom: 15px;
 }
 
-.left-panel h1 {
-    font-size: 32px;
-    margin-bottom: 20px;
+.login-header h1 {
+  font-size: 34px;   /* was small → now strong brand */
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.5px;
+
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.left-panel p {
-    font-size: 16px;
-    opacity: 0.9;
+.login-header p {
+  font-size: 15px;   /* improved readability */
+  color: #64748b;
+  margin-top: 6px;
 }
 
-/* Right Panel */
-.right-panel {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #ffffff;
+/* =========================
+   FORM
+========================= */
+
+.login-card h2 {
+  text-align: center;
+  margin: 20px 0 25px;
+  font-size: 26px;   /* bigger & more premium */
+  font-weight: 700;
 }
 
-/* Form Box */
-.form-box {
-    width: 80%;
-    max-width: 350px;
+form {
+  display: flex;
+  flex-direction: column;
 }
 
-.form-box h2 {
-    margin-bottom: 25px;
-    color: #2a5298;
-}
-
-/* Inputs */
 input {
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 15px;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: 0.3s;
+  margin-bottom: 14px;
+  padding: 16px;   /* bigger */
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  outline: none;
+
+  font-size: 15px;   /* clearer text */
+  transition: 0.2s;
 }
 
 input:focus {
-    border-color: #2a5298;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42, 82, 152, 0.3);
+  border: 1px solid #3b82f6;
 }
 
-/* Button */
+/* BUTTON */
+
 button {
-    width: 100%;
-    padding: 14px;
-    background: #2a5298;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
+  margin-top: 10px;
+  padding: 16px;
+  border-radius: 12px;
 
-button:hover {
-    background: #1e3c72;
-}
+  font-size: 16px;
+  font-weight: 600;
 
-/* Toggle */
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+/* =========================
+   TOGGLE TEXT
+========================= */
+
 .toggle-text {
-    margin-top: 15px;
-    font-size: 14px;
-    color: grey;
+  margin-top: 18px;
+  font-size: 15px;
+  text-align: center;
+  color: #475569;
 }
 
-#toggle-btn {
-    color: #28a745;
-    font-weight: 600;
-    cursor: pointer;
+.toggle-text span {
+  color: #2a5298;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-/* Messages */
-#message {
-    margin-top: 10px;
-    font-size: 14px;
-    text-align: center;
-}
+/* =========================
+   MESSAGE
+========================= */
 
-/* Hidden */
-.hidden {
-    display: none;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-    .main-container {
-        flex-direction: column;
-        height: auto;
-    }
-
-    .left-panel {
-        padding: 40px;
-        text-align: center;
-    }
-
-    .right-panel {
-        padding: 40px 0;
-    }
+.message {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 14px;
 }

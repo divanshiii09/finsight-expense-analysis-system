@@ -1,39 +1,74 @@
 import React from "react";
 import "./IncomeCategory.css";
-
-const categories = [
-  { name: "Fixed Income", icon: "💼", desc: "Same income every month" },
-  { name: "Variable Income", icon: "📊", desc: "Income changes monthly" },
-  { name: "Freelancer / Gig", icon: "🧑‍💻", desc: "Project based earnings" },
-  { name: "Business Owner", icon: "🏢", desc: "Runs a business" },
-  { name: "No Income", icon: "🎓", desc: "Student or not earning" },
-  { name: "Multiple Sources", icon: "💰", desc: "More than one income" },
-];
+import Navbar from "./Navbar";
+<Navbar title="Income Category" />
 
 function IncomeCategory({ onNext }) {
-  const handleClick = (category) => {
-    onNext({ incomeType: category.name, category: category.name });
+
+  const handleSelect = (value) => {
+    onNext(value);
   };
 
   return (
-    <div className="income-container">
-      <h1 className="income-title">Tell us about your income</h1>
-      <p className="income-subtitle">
-        This helps us personalize your financial plan
-      </p>
+    <div className="income-page">
 
-      <div className="income-grid">
-        {categories.map((item) => (
+      <div className="income-wrapper">
+
+        {/* HEADER */}
+        <div className="income-header">
+          <h1>Select Your Income Category</h1>
+          <p>Choose the option that best describes your income</p>
+        </div>
+
+        {/* GRID */}
+        <div className="income-grid">
+
           <div
-            key={item.name}
             className="income-card"
-            onClick={() => onNext(item.name)}
+            onClick={() => handleSelect("Fixed Income")}
           >
-            <div className="income-icon">{item.icon}</div>
-            <div className="income-name">{item.name}</div>
-            <div className="income-desc">{item.desc}</div>
+            <div className="income-icon">💼</div>
+            <div className="income-name">Fixed Income</div>
+            <div className="income-desc">
+              Salary or stable monthly income
+            </div>
           </div>
-        ))}
+
+          <div
+            className="income-card"
+            onClick={() => handleSelect("Freelancer")}
+          >
+            <div className="income-icon">🧑‍💻</div>
+            <div className="income-name">Freelancer</div>
+            <div className="income-desc">
+              Project-based or irregular income
+            </div>
+          </div>
+
+          <div
+            className="income-card"
+            onClick={() => handleSelect("Business")}
+          >
+            <div className="income-icon">🏢</div>
+            <div className="income-name">Business</div>
+            <div className="income-desc">
+              Own business or enterprise
+            </div>
+          </div>
+
+          <div
+            className="income-card"
+            onClick={() => handleSelect("Multiple Income Sources")}
+          >
+            <div className="income-icon">🔀</div>
+            <div className="income-name">Multiple Sources</div>
+            <div className="income-desc">
+              Combination of income streams
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
   );

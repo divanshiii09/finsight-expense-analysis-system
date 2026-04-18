@@ -1,98 +1,144 @@
 import React, { useState } from "react";
 import "./Questionnaire.css";
+import Navbar from "./Navbar";
+
+<Navbar title="Questionnaire" onBack={onBack} />
+
+const rangeOptions = [
+  "Below ₹10,000",
+  "₹10,000 – ₹20,000",
+  "₹20,000 – ₹30,000",
+  "₹30,000 – ₹50,000",
+  "₹50,000 – ₹75,000",
+  "₹75,000 – ₹1,00,000",
+  "Above ₹1,00,000",
+  "Custom"
+];
 
 function Questionnaire({ onNext }) {
-  const [formData, setFormData] = useState({
-    monthlyIncome: "",
-    monthlySpending: "",
-    financialGoals: "",
-    monthlySavings: "",
-    riskLevel: "",
+
+  const [answers, setAnswers] = useState({
+    incomeRange: "",
+    customIncome: "",
+    spendingRange: "",
+    savingRange: ""
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setAnswers({
+      ...answers,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleContinue = () => {
+
+    const finalIncome =
+      answers.incomeRange === "Custom"
+        ? answers.customIncome
+        : answers.incomeRange;
+
+    if (!finalIncome || !answers.spendingRange || !answers.savingRange) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    onNext({
+      incomeRange: finalIncome,
+      spendingRange: answers.spendingRange,
+      savingRange: answers.savingRange
+    });
   };
 
   return (
     <div className="questionnaire-container">
       <div className="questionnaire-card">
-        <h2 className="questionnaire-title">Quick Financial Questionnaire</h2>
+        <h2 className="questionnaire-title">Questionnaire</h2>
 
-        <div className="form-group">
-          <label className="form-label">Select your monthly income</label>
-          <select
-            name="monthlyIncome"
-            className="form-select"
-            onChange={handleChange}
-          >
-            <option value="">Select option</option>
-            <option>Less than ₹20,000</option>
-            <option>₹20,000 - ₹50,000</option>
-            <option>₹50,001 - ₹1,00,000</option>
-            <option>Above ₹1,00,000</option>
-          </select>
+        {/* 🔥 2 COLUMN LAYOUT */}
+        <div
+          style={{
+            display: "flex",
+            gap: "30px",
+            flexWrap: "wrap"
+          }}
+        >
+
+          {/* LEFT COLUMN */}
+          <div style={{ flex: "1", minWidth: "300px" }}>
+            
+            {/* INCOME */}
+            <div className="form-group">
+              <label className="form-label">Income Range</label>
+
+              <select
+                className="form-select"
+                name="incomeRange"
+                value={answers.incomeRange}
+                onChange={handleChange}
+              >
+                <option value="">Select Income Range</option>
+                {rangeOptions.map(opt => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+
+              {/* CUSTOM INPUT */}
+              {answers.incomeRange === "Custom" && (
+                <input
+                  type="number"
+                  name="customIncome"
+                  placeholder="Enter your monthly income"
+                  className="form-input"
+                  value={answers.customIncome}
+                  onChange={handleChange}
+                  style={{ marginTop: "10px" }}
+                />
+              )}
+            </div>
+
+          </div>
+
+          {/* RIGHT COLUMN */}
+          <div style={{ flex: "1", minWidth: "300px" }}>
+            
+            {/* SPENDING */}
+            <div className="form-group">
+              <label className="form-label">Spending Range</label>
+              <select
+                className="form-select"
+                name="spendingRange"
+                value={answers.spendingRange}
+                onChange={handleChange}
+              >
+                <option value="">Select Spending Range</option>
+                {rangeOptions.slice(0, -1).map(opt => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* SAVING */}
+            <div className="form-group">
+              <label className="form-label">Saving Range</label>
+              <select
+                className="form-select"
+                name="savingRange"
+                value={answers.savingRange}
+                onChange={handleChange}
+              >
+                <option value="">Select Saving Range</option>
+                {rangeOptions.slice(0, -1).map(opt => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+
+          </div>
+
         </div>
 
-        <div className="form-group">
-          <label className="form-label">How much do you mostly spend in a month?</label>
-          <select
-            name="monthlySpending"
-            className="form-select"
-            onChange={handleChange}
-          >
-            <option value="">Select option</option>
-            <option>Less than ₹10,000</option>
-            <option>₹10,000 - ₹30,000</option>
-            <option>₹30,001 - ₹50,000</option>
-            <option>Above ₹50,000</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Do you have any major financial goals?</label>
-          <select
-            name="financialGoals"
-            className="form-select"
-            onChange={handleChange}
-          >
-            <option value="">Select option</option>
-            <option>Saving</option>
-            <option>Investment</option>
-            <option>Debt Payment</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">How much do you save monthly?</label>
-          <select
-            name="monthlySavings"
-            className="form-select"
-            onChange={handleChange}
-          >
-            <option value="">Select option</option>
-            <option>Less than ₹5,000</option>
-            <option>₹5,000 - ₹10,000</option>
-            <option>Above ₹10,000</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">What is your financial risk comfort?</label>
-          <select
-            name="riskLevel"
-            className="form-select"
-            onChange={handleChange}
-          >
-            <option value="">Select option</option>
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-          </select>
-        </div>
-
-        <button className="next-button" onClick={() => onNext(formData)}>
+        <button className="next-button" onClick={handleContinue}>
           Continue
         </button>
       </div>

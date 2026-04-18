@@ -1,10 +1,168 @@
-.limit-input {
-  margin-top: 12px;
+/* =========================
+   PAGE BACKGROUND
+========================= */
+
+.budget-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #eef2ff,
+    #f8fafc,
+    #e0ecff
+  );
+
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* =========================
+   WRAPPER
+========================= */
+
+.budget-wrapper {
   width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #dcdcdc;
-  background: #ffffff;
+  max-width: 1000px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.budget-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.budget-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.budget-header p {
+  margin-top: 8px;
+  color: #64748b;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.budget-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* =========================
+   CARD (CONSISTENT GLASS)
+========================= */
+
+.budget-card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(12px);
+
+  padding: 24px;
+  border-radius: 16px;
+
+  border: 1px solid rgba(30,60,114,0.12);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+
+  transition: all 0.25s ease;
+}
+
+.budget-card:hover {
+  transform: translateY(-4px);
+  border: 1px solid rgba(59,130,246,0.3);
+}
+
+/* TITLE */
+.budget-card h3 {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
   color: #1e3c72;
+}
+
+/* INPUT */
+.budget-input {
+  width: 100%;
+  padding: 14px;
+
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+
+  font-size: 14px;
+  outline: none;
+
+  transition: 0.2s ease;
+}
+
+/* INPUT FOCUS */
+.budget-input:focus {
+  border: 1px solid #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.budget-action {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.budget-action button {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+
+  border: none;
+  padding: 14px 40px;
+
+  border-radius: 12px;
   font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.budget-action button:hover {
+  opacity: 0.9;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+.dashboard-main.dark .budget-page {
+  background: linear-gradient(
+    135deg,
+    #0b1220,
+    #0f172a,
+    #111827
+  );
+}
+
+.dashboard-main.dark .budget-card {
+  background: rgba(30,41,59,0.6);
+  border: 1px solid rgba(148,163,184,0.15);
+}
+
+.dashboard-main.dark .budget-card h3 {
+  color: #93c5fd;
+}
+
+.dashboard-main.dark .budget-input {
+  background: rgba(30,41,59,0.6);
+  color: #e5e7eb;
+  border: 1px solid rgba(148,163,184,0.2);
 }

@@ -1,0 +1,32 @@
+.preview-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-card {
+  width: 600px;
+  background: rgba(255,255,255,0.7);
+  padding: 30px;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.secondary {
+  background: #e2e8f0;
+  color: #1e3c72;
+}

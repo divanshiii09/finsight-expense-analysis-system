@@ -1,9 +1,17 @@
+/* RESET FULL PAGE BACKGROUND */
+
 html, body, #root {
-  height: 100%;
   margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #ffffff; /* LIGHT MODE BASE */
 }
 
-body {
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
-  font-family: Arial, sans-serif;
+/* DARK MODE FULL PAGE */
+.dashboard-main.dark {
+  background: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
 }

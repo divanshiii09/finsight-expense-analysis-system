@@ -1,8 +1,11 @@
 /* Global app styling */
 .app-container {
-  background: #1e3c72; /* blue background */
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
   min-height: 100vh;
-  color: #ffffff;
-  font-family: "Arial", sans-serif;
-  padding: 20px 0;
+  width: 100%;              /* 🔥 ADD THIS */
+  display: flex;            /* 🔥 ADD THIS */
+  justify-content: center;  /* 🔥 ADD THIS */
+  align-items: center;      /* 🔥 ADD THIS */
+  padding: 20px;
+  box-sizing: border-box;   /* 🔥 ADD THIS */
 }

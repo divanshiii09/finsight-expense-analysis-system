@@ -1,72 +1,148 @@
-.spending-container {
-  text-align: center;
-  color: #ffffff;
+/* =========================
+   PAGE BACKGROUND
+========================= */
+
+.spending-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #eef2ff,
+    #f8fafc,
+    #e0ecff
+  );
+
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* =========================
+   WRAPPER
+========================= */
+
+.spending-wrapper {
   width: 100%;
-  padding: 40px 20px;
+  max-width: 1000px;
 }
 
-.spending-title {
-  font-size: 34px;
+/* =========================
+   HEADER
+========================= */
+
+.spending-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.spending-header h1 {
+  font-size: 32px;
   font-weight: 700;
+
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.spending-subtitle {
+.spending-header p {
   margin-top: 8px;
-  opacity: 0.9;
+  color: #64748b;
 }
+
+/* =========================
+   GRID
+========================= */
 
 .spending-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  max-width: 900px;
-  margin: 50px auto;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
+
+/* =========================
+   CARD (GLASS STYLE)
+========================= */
 
 .spending-card {
-  padding: 30px;
-  border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid #dcdcdc;
-  color: grey;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(12px);
+
+  padding: 20px;
+  border-radius: 16px;
+
+  border: 1px solid rgba(30,60,114,0.12);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+
   cursor: pointer;
-  transition: all 0.3s ease;
-}
+  transition: all 0.25s ease;
 
-.spending-card:hover {
-  transform: translateY(-8px);
-  background: #f4f7fb;
-}
-
-.spending-card.active {
-  border: 2px solid #28a745;
-  background: #ffffff;
-}
-
-.spending-icon {
-  font-size: 30px;
-  margin-bottom: 10px;
-}
-
-.spending-name {
-  font-size: 17px;
   font-weight: 600;
   color: #1e3c72;
 }
 
-.spending-button {
-  margin-top: 25px;
-  padding: 14px 28px;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
-  font-weight: 600;
-  background: #1e3c72;
-  color: #ffffff;
-  cursor: pointer;
-  transition: 0.3s;
+/* HOVER */
+.spending-card:hover {
+  transform: translateY(-4px);
+  border: 1px solid rgba(59,130,246,0.4);
 }
 
-.spending-button:hover {
-  background: #2a5298;
+/* ACTIVE SELECTED */
+.spending-card.active {
+  border: 1px solid #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+  background: rgba(59,130,246,0.08);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.spending-action {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.spending-action button {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  border: none;
+
+  padding: 14px 40px;
+  border-radius: 12px;
+
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.spending-action button:hover {
+  opacity: 0.9;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+.dashboard-main.dark .spending-page {
+  background: linear-gradient(
+    135deg,
+    #0b1220,
+    #0f172a,
+    #111827
+  );
+}
+
+.dashboard-main.dark .spending-card {
+  background: rgba(30,41,59,0.6);
+  border: 1px solid rgba(148,163,184,0.15);
+  color: #e2e8f0;
+}
+
+.dashboard-main.dark .spending-card.active {
+  background: rgba(59,130,246,0.15);
+  border: 1px solid #3b82f6;
 }

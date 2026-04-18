@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css"; // optional global styles
+import { BrowserRouter } from "react-router-dom"; // ✅ ADD THIS
+import App from "./App"; // ✅ USE App (NOT AppRouter)
+import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
-  <React.StrictMode>
+  <BrowserRouter>   {/* ✅ WRAP APP */}
     <App />
-  </React.StrictMode>
+  </BrowserRouter>
 );
