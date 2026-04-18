@@ -2,6 +2,50 @@ import pdfplumber
 import pandas as pd
 import re
 from io import BytesIO
+import re
+
+def clean_description(desc):
+    if not desc:
+        return desc
+
+    # 1. Remove amount
+    desc = re.sub(r'₹\s*[\d,]+(?:\.\d{1,2})?', '', desc)
+
+    # 2. Remove transaction IDs
+    desc = re.sub(
+        r'\b(UPI Transaction ID|Transaction ID|UTR No\.?|UTR)\b[:\s]*[A-Za-z0-9]+',
+        '',
+        desc,
+        flags=re.IGNORECASE
+    )
+
+    # 3. Remove metadata
+    desc = re.sub(
+        r'\b(Paid by|Credited to|Debited from)\b.*',
+        '',
+        desc,
+        flags=re.IGNORECASE
+    )
+
+    # 4. Remove prefixes
+    desc = re.sub(
+        r'\b(Paid to|Received from|Paid|Received)\b',
+        '',
+        desc,
+        flags=re.IGNORECASE
+    )
+
+    # 5. Handle CamelCase
+    desc = re.sub(r'([a-z])([A-Z])', r'\1 \2', desc)
+
+    # 6. If FULLY uppercase or lowercase → just normalize
+    desc = desc.lower()
+
+    # 7. Clean spaces
+    desc = re.sub(r'\s+', ' ', desc).strip()
+
+    # 8. Final formatting
+    return desc.title()
 
 def parse_pdf(file_bytes: bytes):
     full_text = extract_text_from_bytes(file_bytes)
@@ -17,9 +61,9 @@ def parse_pdf(file_bytes: bytes):
     else:
         return None, "Unknown", full_text
 
-
 def extract_text_from_bytes(file_bytes: bytes):
     text = ""
+
     with pdfplumber.open(BytesIO(file_bytes)) as pdf:
         for page in pdf.pages:
             page_text = page.extract_text()
@@ -27,9 +71,7 @@ def extract_text_from_bytes(file_bytes: bytes):
                 text += page_text + "\n"
     return text
 
-
 def _parse_gpay_from_text(text):
-
 
     transactions = []
     lines = text.split("\n")
@@ -46,7 +88,7 @@ def _parse_gpay_from_text(text):
             if match:
                 date = match.group(1)
                 raw_type = match.group(2)
-                description = match.group(3).strip()
+                description = clean_description(match.group(3))
                 amount = float(match.group(4).replace(",", ""))
 
                 if raw_type == "Paidto":
