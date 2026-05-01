@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-/* ✅ CREATE APP */
 const app = express();
 
 /* ✅ MIDDLEWARE */
@@ -14,126 +13,73 @@ app.get("/", (req, res) => {
   res.send("Server is working ✅");
 });
 
-/* ✅ CONNECT DATABASE (LOCAL) */
+/* ✅ DB CONNECT */
 mongoose.connect("mongodb://127.0.0.1:27017/financeDB")
   .then(() => console.log("MongoDB connected ✅"))
-  .catch(err => console.error("MongoDB connection error ❌:", err));
+  .catch(err => console.log("MongoDB error ❌", err));
 
 /* ============================
-   ✅ AUTH SCHEMA (LOGIN/REGISTER)
+   USER MODEL
 ============================ */
-const userSchema = new mongoose.Schema({
+const User = mongoose.model("User", {
   email: String,
   password: String
 });
 
-const User = mongoose.model("User", userSchema);
-
 /* ============================
-   ✅ REGISTER API
+   REGISTER
 ============================ */
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // check if user already exists
-    const existingUser = await User.findOne({ email });
+    const exists = await User.findOne({ email });
 
-    if (existingUser) {
-      return res.json({
-        success: false,
-        message: "User already exists"
-      });
+    if (exists) {
+      return res.json({ success: false, message: "User already exists" });
     }
 
-    const newUser = new User({ email, password });
-    await newUser.save();
+    await User.create({ email, password });
 
     res.json({
       success: true,
-      message: "User registered successfully"
+      message: "Registered successfully",
+      name: email.split("@")[0]
     });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      success: false,
-      message: "Server error"
-    });
+    console.log(err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
 /* ============================
-   ✅ LOGIN API
+   LOGIN
 ============================ */
 app.post("/api/auth/login", async (req, res) => {
   try {
+    console.log("LOGIN API HIT");
+
     const { email, password } = req.body;
 
     const user = await User.findOne({ email, password });
 
-    if (user) {
-      res.json({
-        success: true,
-        message: "Login successful"
-      });
-    } else {
-      res.json({
-        success: false,
-        message: "Invalid credentials"
-      });
+    if (!user) {
+      return res.json({ success: false, message: "Invalid credentials" });
     }
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      success: false,
-      message: "Server error"
-    });
-  }
-});
-
-/* ============================
-   ✅ USER DATA SCHEMA
-============================ */
-const userDataSchema = new mongoose.Schema({
-  incomeCategory: String,
-  questionnaire: Object,
-  spendingPriority: Object,
-  budgetLimits: Object
-}, { timestamps: true });
-
-const UserData = mongoose.model("UserData", userDataSchema);
-
-/* ============================
-   ✅ SAVE USER DATA API
-============================ */
-app.post("/api/userdata/save", async (req, res) => {
-  try {
-    console.log("📥 FULL BODY:", req.body);
-
-    const data = new UserData(req.body);
-    await data.save();
-
-    console.log("✅ SAVED SUCCESSFULLY");
 
     res.json({
       success: true,
-      message: "Data saved successfully!"
+      name: email.split("@")[0]
     });
 
   } catch (err) {
-    console.error("❌ ERROR DETAILS:", err);
-    res.status(500).json({
-      success: false,
-      message: "Server error"
-    });
+    console.log(err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-/* ============================
-   ✅ START SERVER
-============================ */
+/* ✅ START SERVER */
 app.listen(5000, () => {
-  console.log("Server running on port 5000 🚀");
+  console.log("🚀 Server running on http://localhost:5000");
 });

@@ -1,81 +1,134 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import Login from "./components/login";
 import IncomeCategory from "./components/IncomeCategory";
+import Questionnaire from "./components/Questionnaire";
 import SpendingPriority from "./components/SpendingPriority";
 import BudgetLimits from "./components/BudgetLimits";
-import Dashboard from "./components/Dashboard";
 import Preview from "./components/Preview";
-import Questionnaire from "./components/Questionnaire";
+import Dashboard from "./components/Dashboard";
 
 function App() {
+
+  // ✅ ALWAYS start from login
   const [step, setStep] = useState("login");
+
+  const [user, setUser] = useState(null);
 
   const [data, setData] = useState({
     income: "",
+    questionnaire: {},
     categories: [],
-    priorities: {},
     limits: {}
   });
 
-  return (
-    <>
-      {step === "login" && (
-        <Login onLogin={() => setStep("income")} />
-      )}
+  // ✅ Load saved onboarding data ONLY (not auto-login)
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem("onboardingData"));
+    if (savedData) setData(savedData);
+  }, []);
 
-      {step === "income" && (
-        <IncomeCategory
-          onNext={(val) => {
-            setData({ ...data, income: val });
-            setStep("questionnaire");
-          }}
-        />
-      )}
+  // ======================
+  // ✅ LOGIN HANDLER
+  // ======================
+  const handleLogin = (userData, isNewUser) => {
+    setUser(userData);
 
-      {step === "questionnaire" && (
-        <Questionnaire
-          onNext={(categories) => {
-            setData({ ...data, categories });
-            setStep("priority");
-          }}
-          onBack={() => setStep("income")}
-        />
-      )}
+    // save user
+    localStorage.setItem("user", JSON.stringify(userData));
 
-      {step === "priority" && (
-        <SpendingPriority
-          onNext={(priorities) => {
-            setData({ ...data, priorities });
-            setStep("budget");
-          }}
-          onBack={() => setStep("questionnaire")}
-        />
-      )}
+    if (isNewUser) {
+      setStep("income"); // 👉 new user flow
+    } else {
+      setStep("dashboard"); // 👉 existing user
+    }
+  };
 
-      {step === "budget" && (
-        <BudgetLimits
-          selectedCategories={data.categories}
-          onNext={(limits) => {
-            setData({ ...data, limits });
-            setStep("preview");
-          }}
-          onBack={() => setStep("priority")}
-        />
-      )}
+  // ======================
+  // FLOW CONTROL
+  // ======================
 
-      {step === "preview" && (
-        <Preview
-          data={data}
-          onEdit={() => setStep("income")}
-          onConfirm={() => setStep("dashboard")}
-        />
-      )}
+  if (step === "login") {
+    return <Login onLogin={handleLogin} />;
+  }
 
-      {step === "dashboard" && (
-        <Dashboard />
-      )}
-    </>
-  );
+  if (step === "income") {
+    return (
+      <IncomeCategory
+        onNext={(val) => {
+          const updated = { ...data, income: val };
+          setData(updated);
+          localStorage.setItem("onboardingData", JSON.stringify(updated));
+          setStep("questionnaire");
+        }}
+      />
+    );
+  }
+
+  if (step === "questionnaire") {
+    return (
+      <Questionnaire
+        onNext={(val) => {
+          const updated = { ...data, questionnaire: val };
+          setData(updated);
+          localStorage.setItem("onboardingData", JSON.stringify(updated));
+          setStep("spending");
+        }}
+        onBack={() => setStep("income")}
+      />
+    );
+  }
+
+  if (step === "spending") {
+    return (
+      <SpendingPriority
+        selected={data.categories}
+        onNext={(val) => {
+          const updated = { ...data, categories: val };
+          setData(updated);
+          localStorage.setItem("onboardingData", JSON.stringify(updated));
+          setStep("budget");
+        }}
+        onBack={() => setStep("questionnaire")}
+      />
+    );
+  }
+
+  if (step === "budget") {
+    return (
+      <BudgetLimits
+        categories={data.categories}
+        limits={data.limits}
+        onNext={(val) => {
+          const updated = { ...data, limits: val };
+          setData(updated);
+          localStorage.setItem("onboardingData", JSON.stringify(updated));
+          setStep("preview");
+        }}
+        onBack={() => setStep("spending")}
+      />
+    );
+  }
+
+  if (step === "preview") {
+    return (
+      <Preview
+        data={data}
+        updateData={setData}
+        onConfirm={() => {
+          localStorage.setItem("onboardingData", JSON.stringify(data));
+          setStep("dashboard");
+        }}
+        onBack={() => setStep("budget")}
+      />
+    );
+  }
+
+  if (step === "dashboard") {
+    return <Dashboard />;
+  }
+
+  return null;
 }
 
 export default App;

@@ -24,31 +24,52 @@ function Login({ onLogin }) {
         body: JSON.stringify({ email, password })
       });
 
-      const data = await res.json();
+      // ✅ SAFE PARSE
+      const text = await res.text();
+      let data;
+
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error("❌ NOT JSON RESPONSE:", text);
+        setMessage("Invalid server response ❌");
+        return;
+      }
+
+      console.log("✅ SERVER RESPONSE:", data);
 
       if (data.success) {
+
+        const userData = {
+          email,
+          name: data.name || email.split("@")[0]
+        };
+
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        // ✅ MAIN FIX HERE
         if (isRegister) {
-          setMessage("Registered successfully! Now login.");
-          setIsRegister(false);
+          // 👉 NEW USER → START ONBOARDING
+          onLogin(userData, true);
         } else {
-          onLogin();
+          // 👉 EXISTING USER → DASHBOARD
+          onLogin(userData, false);
         }
+
       } else {
-        setMessage(data.message || "Something went wrong");
+        setMessage(data.message || "Login failed");
       }
 
     } catch (err) {
-      console.error("ERROR:", err);
-      setMessage("Server connection failed");
+      console.error("❌ FETCH ERROR:", err);
+      setMessage("Server not reachable ❌");
     }
   };
 
   return (
     <div className="login-page">
-
       <div className="login-card">
 
-        {/* BRAND */}
         <div className="login-header">
           <h1>FinSight</h1>
           <p>Personal Expense Intelligence</p>
@@ -78,32 +99,19 @@ function Login({ onLogin }) {
           </button>
         </form>
 
-        {/* TOGGLE */}
         <p className="toggle-text">
-          {isRegister ? "Already have an account?" : "Don’t have an account?"}{" "}
+          {isRegister ? "Already have an account?" : "Don’t have an account?"}
           <span
             onClick={() => {
               setIsRegister(!isRegister);
               setMessage("");
             }}
           >
-            {isRegister ? "Login" : "Register"}
+            {isRegister ? " Login" : " Register"}
           </span>
         </p>
 
-        {/* MESSAGE */}
-        {message && (
-          <p
-            className="message"
-            style={{
-              color: message.toLowerCase().includes("success")
-                ? "#22c55e"
-                : "#ef4444"
-            }}
-          >
-            {message}
-          </p>
-        )}
+        {message && <p className="message">{message}</p>}
 
       </div>
     </div>

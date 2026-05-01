@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import "./Questionnaire.css";
-import Navbar from "./Navbar";
-
-<Navbar title="Questionnaire" onBack={onBack} />
 
 const rangeOptions = [
   "Below ₹10,000",
@@ -32,7 +29,6 @@ function Questionnaire({ onNext }) {
   };
 
   const handleContinue = () => {
-
     const finalIncome =
       answers.incomeRange === "Custom"
         ? answers.customIncome
@@ -55,19 +51,9 @@ function Questionnaire({ onNext }) {
       <div className="questionnaire-card">
         <h2 className="questionnaire-title">Questionnaire</h2>
 
-        {/* 🔥 2 COLUMN LAYOUT */}
-        <div
-          style={{
-            display: "flex",
-            gap: "30px",
-            flexWrap: "wrap"
-          }}
-        >
+        <div style={{ display: "flex", gap: "30px", flexWrap: "wrap" }}>
 
-          {/* LEFT COLUMN */}
           <div style={{ flex: "1", minWidth: "300px" }}>
-            
-            {/* INCOME */}
             <div className="form-group">
               <label className="form-label">Income Range</label>
 
@@ -83,7 +69,6 @@ function Questionnaire({ onNext }) {
                 ))}
               </select>
 
-              {/* CUSTOM INPUT */}
               {answers.incomeRange === "Custom" && (
                 <input
                   type="number"
@@ -96,21 +81,12 @@ function Questionnaire({ onNext }) {
                 />
               )}
             </div>
-
           </div>
 
-          {/* RIGHT COLUMN */}
           <div style={{ flex: "1", minWidth: "300px" }}>
-            
-            {/* SPENDING */}
             <div className="form-group">
               <label className="form-label">Spending Range</label>
-              <select
-                className="form-select"
-                name="spendingRange"
-                value={answers.spendingRange}
-                onChange={handleChange}
-              >
+              <select className="form-select" name="spendingRange" value={answers.spendingRange} onChange={handleChange}>
                 <option value="">Select Spending Range</option>
                 {rangeOptions.slice(0, -1).map(opt => (
                   <option key={opt} value={opt}>{opt}</option>
@@ -118,22 +94,15 @@ function Questionnaire({ onNext }) {
               </select>
             </div>
 
-            {/* SAVING */}
             <div className="form-group">
               <label className="form-label">Saving Range</label>
-              <select
-                className="form-select"
-                name="savingRange"
-                value={answers.savingRange}
-                onChange={handleChange}
-              >
+              <select className="form-select" name="savingRange" value={answers.savingRange} onChange={handleChange}>
                 <option value="">Select Saving Range</option>
                 {rangeOptions.slice(0, -1).map(opt => (
                   <option key={opt} value={opt}>{opt}</option>
                 ))}
               </select>
             </div>
-
           </div>
 
         </div>
