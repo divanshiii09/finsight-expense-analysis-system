@@ -1,4 +1,6 @@
 from fastapi import APIRouter, UploadFile, File
+import pandas as pd
+
 from modules.parsers import parse_pdf
 from modules.categorization import (
     categorize_transaction,
@@ -15,72 +17,67 @@ from modules.models import ManualTransaction
 
 router = APIRouter()
 
-# Temporary in-memory storage
-manual_transactions = []
+# =====================================================
+# MASTER TRANSACTION STORE
+# Stores:
+# - Uploaded PDF transactions
+# - Manual transactions
+# =====================================================
+transactions_store = []
 
 
-# ==============================
-# Upload PDF Statement Endpoint
-# ==============================
+# =====================================================
+# UPLOAD PDF STATEMENT
+# =====================================================
 @router.post("/upload-statement/")
 async def upload_statement(
     file: UploadFile = File(..., description="Upload a PDF file")
 ):
+
     file_bytes = await file.read()
 
     df, detected_type, _ = parse_pdf(file_bytes)
 
-    transactions = []
-    metrics = {}
-    visuals = {}
+    uploaded_transactions = []
 
     if df is not None and not df.empty:
 
-        # Normalize column names
+        # Normalize columns
         df.columns = df.columns.str.lower()
 
-        # Clean missing descriptions
+        # Fill missing descriptions
         df["description"] = df["description"].fillna("Unknown")
 
-        # Auto categorization
+        # Auto category prediction
         df["category"] = df["description"].apply(categorize_transaction)
 
-        # Need / Want classification
+        # Auto need/want classification
         df["classify"] = df["category"].apply(classify_need_or_want)
 
-        # Convert dataframe to JSON response
-        transactions = df.to_dict(orient="records")
+        # Convert dataframe to list
+        uploaded_transactions = df.to_dict(orient="records")
 
-        # Financial Metrics
-        metrics = compute_financial_metrics(df)
-
-        # Visual Insights Data
-        visuals = {
-            "expense_by_category": expense_by_category(df),
-            "need_vs_want": need_vs_want(df),
-            "top_expenses": top_expenses(df),
-            "monthly_trends": monthly_trends(df)
-        }
+        # Add uploaded transactions to master store
+        transactions_store.extend(uploaded_transactions)
 
     return {
+        "message": "Statement uploaded successfully",
         "detected_type": detected_type,
-        "total_transactions": len(transactions),
-        "metrics": metrics,
-        "visuals": visuals,
-        "transactions": transactions
+        "uploaded_transactions": len(uploaded_transactions),
+        "total_transactions": len(transactions_store)
     }
 
 
-# ====================================
-# Add Manual Transaction Endpoint
-# ====================================
+# =====================================================
+# ADD MANUAL TRANSACTION
+# =====================================================
 @router.post("/add-manual-transaction/")
 async def add_manual_transaction(txn: ManualTransaction):
 
     # Auto category prediction
     category = categorize_transaction(txn.description)
 
-    # Auto need/want prediction
+    # Auto need/want classification
     classify = classify_need_or_want(category)
 
     # Create transaction object
@@ -94,23 +91,47 @@ async def add_manual_transaction(txn: ManualTransaction):
         "classify": classify
     }
 
-    # Store transaction temporarily
-    manual_transactions.append(new_transaction)
+    # Add to master transaction store
+    transactions_store.append(new_transaction)
 
     return {
         "message": "Manual transaction added successfully",
         "transaction": new_transaction,
-        "total_manual_transactions": len(manual_transactions)
+        "total_transactions": len(transactions_store)
     }
 
 
-# ====================================
-# Get All Manual Transactions
-# ====================================
-@router.get("/manual-transactions/")
-async def get_manual_transactions():
+# =====================================================
+# DASHBOARD DATA API
+# =====================================================
+@router.get("/dashboard-data/")
+async def get_dashboard_data():
+
+    if not transactions_store:
+        return {
+            "total_transactions": 0,
+            "metrics": {},
+            "visuals": {},
+            "transactions": []
+        }
+
+    # Convert all transactions to DataFrame
+    df = pd.DataFrame(transactions_store)
+
+    # Generate metrics
+    metrics = compute_financial_metrics(df)
+
+    # Generate visual insights
+    visuals = {
+        "expense_by_category": expense_by_category(df),
+        "need_vs_want": need_vs_want(df),
+        "top_expenses": top_expenses(df),
+        "monthly_trends": monthly_trends(df)
+    }
 
     return {
-        "total_manual_transactions": len(manual_transactions),
-        "transactions": manual_transactions
+        "total_transactions": len(transactions_store),
+        "metrics": metrics,
+        "visuals": visuals,
+        "transactions": transactions_store
     }
