@@ -6,14 +6,14 @@ function SpendingPriority({ onNext, onBack, selected = [] }) {
 
   const [selectedItems, setSelectedItems] = useState(selected);
 
-  const categories = [
-    "Food & Groceries",
-    "Shopping",
-    "Bills",
-    "Health",
-    "Entertainment",
-    "Transport",
-  ];
+ const categories = [
+  "Food & Groceries",
+  "Shopping",
+  "Bills",
+  "Health",
+  "Other / Miscellaneous",   // ✅ FIXED
+  "Transport",
+];
 
   const toggleSelect = (item) => {
     if (selectedItems.includes(item)) {
@@ -23,12 +23,11 @@ function SpendingPriority({ onNext, onBack, selected = [] }) {
     }
   };
 
-  // ✅ FIX FUNCTION
+  // ✅ FIX: SAVE BEFORE NEXT
   const handleNext = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) return;
 
-    // ✅ SAVE PER USER (MAIN FIX)
     localStorage.setItem(
       `categories_${user.email}`,
       JSON.stringify(selectedItems)

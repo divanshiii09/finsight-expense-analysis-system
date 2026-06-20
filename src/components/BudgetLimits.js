@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./BudgetLimits.css";
 import Navbar from "./Navbar";
 
@@ -11,85 +11,99 @@ function BudgetLimits({ onNext, onBack }) {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) return;
 
-    const stored = JSON.parse(
-      localStorage.getItem(`categories_${user.email}`)
-    );
+    const savedCategories =
+      JSON.parse(localStorage.getItem(`categories_${user.email}`)) || [];
 
-    if (stored && stored.length > 0) {
-      setCategories(stored);
-    }
+    const savedLimits =
+      JSON.parse(localStorage.getItem(`limits_${user.email}`)) || {};
+
+    setCategories(savedCategories);
+    setLimits(savedLimits);
   }, []);
 
-  const handleChange = (cat, value) => {
-    setLimits({
-      ...limits,
-      [cat]: value
-    });
+  const handleChange = (category, value) => {
+    setLimits(prev => ({
+      ...prev,
+      [category]: value
+    }));
   };
 
   const handleNext = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) return;
 
+    // ✅ CLEAN SAVE (no empty values)
+    const cleanedLimits = {};
+    Object.keys(limits).forEach(key => {
+      if (limits[key]) {
+        cleanedLimits[key] = Number(limits[key]);
+      }
+    });
+
     localStorage.setItem(
       `limits_${user.email}`,
-      JSON.stringify(limits)
+      JSON.stringify(cleanedLimits)
     );
 
-    onNext(limits);
+    onNext();
   };
 
   return (
     <>
       <Navbar 
-        title="Budget Limits" 
+        title="Set Budget Limits" 
         onBack={onBack} 
         onNext={handleNext}
       />
 
       <div style={{ paddingTop: "80px" }}>
-        <div className="spending-page" style={{ paddingBottom: "60px" }}>
-          <div className="spending-wrapper">
+        <div className="budget-page">
+          <div className="budget-wrapper">
 
-            {/* HEADER (same style as spending page) */}
-            <div className="spending-header">
-              <h1>Set Your Budget Limits</h1>
-              <p>Define monthly limits for selected categories</p>
+            <div className="budget-header">
+              <h1>Set Monthly Limits</h1>
+              <p>Define how much you want to spend</p>
             </div>
 
-            {/* CONTENT */}
-            {categories.length === 0 ? (
-              <p style={{ textAlign: "center", marginTop: "20px" }}>
-                No categories selected
-              </p>
-            ) : (
-              <div className="spending-grid">
+            {/* ✅ PROPER GRID (RESTORES UI) */}
+            {categories.length > 0 ? (
+              <div className="budget-grid">
                 {categories.map((cat, index) => (
-                  <div key={index} className="spending-card">
+                  <div key={index} className="budget-card">
 
-                    <div style={{ marginBottom: "10px", fontWeight: "500" }}>
-                      {cat}
+                    <div className="budget-name">{cat}</div>
+
+                    <div style={{ position: "relative" }}>
+                      <span style={{
+                        position: "absolute",
+                        left: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "#6b7280"
+                      }}>
+                        ₹
+                      </span>
+
+                      <input
+                        type="number"
+                        className="budget-input"
+                        style={{ paddingLeft: "25px" }}
+                        placeholder="0"
+                        value={limits[cat] || ""}
+                        onChange={(e) =>
+                          handleChange(cat, e.target.value)
+                        }
+                      />
                     </div>
-
-                    <input
-                      type="number"
-                      placeholder="Enter amount"
-                      onChange={(e) => handleChange(cat, e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "10px",
-                        borderRadius: "8px",
-                        border: "1px solid #ccc"
-                      }}
-                    />
 
                   </div>
                 ))}
               </div>
+            ) : (
+              <p>No categories selected</p>
             )}
 
-            {/* BUTTON */}
-            <div className="spending-action" style={{ marginTop: "30px" }}>
+            <div className="budget-action">
               <button onClick={handleNext}>
                 Continue
               </button>

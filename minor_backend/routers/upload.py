@@ -60,10 +60,31 @@ async def upload_statement(
         # Add uploaded transactions to master store
         transactions_store.extend(uploaded_transactions)
 
+    # Generate dashboard metrics
+    df_all = pd.DataFrame(transactions_store)
+
+    metrics = compute_financial_metrics(df_all)
+
+    visuals = {
+        "expense_by_category": expense_by_category(df_all),
+        "need_vs_want": need_vs_want(df_all),
+        "top_expenses": top_expenses(df_all),
+        "monthly_trends": monthly_trends(df_all)
+    }
+
     return {
         "message": "Statement uploaded successfully",
+
+        "transactions": uploaded_transactions,
+
+        "metrics": metrics,
+
+        "visuals": visuals,
+
         "detected_type": detected_type,
+
         "uploaded_transactions": len(uploaded_transactions),
+
         "total_transactions": len(transactions_store)
     }
 
@@ -108,12 +129,11 @@ async def add_manual_transaction(txn: ManualTransaction):
 async def get_dashboard_data():
 
     if not transactions_store:
-        return {
-            "total_transactions": 0,
-            "metrics": {},
-            "visuals": {},
-            "transactions": []
-        }
+       return {
+    "transactions": transactions_store,
+    "metrics": metrics,
+    "visuals": visuals
+}
 
     # Convert all transactions to DataFrame
     df = pd.DataFrame(transactions_store)
