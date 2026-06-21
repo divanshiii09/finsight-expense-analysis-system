@@ -14,18 +14,10 @@ from modules.visual_insights import (
     monthly_trends
 )
 from modules.models import ManualTransaction
-
 router = APIRouter()
-
-# =====================================================
-# MASTER TRANSACTION STORE
-# Stores:
-# - Uploaded PDF transactions
-# - Manual transactions
-# =====================================================
 transactions_store = []
-
-
+latest_metrics = {}
+latest_visuals = {}
 # =====================================================
 # UPLOAD PDF STATEMENT
 # =====================================================
@@ -140,8 +132,7 @@ async def get_dashboard_data():
 
     # Generate metrics
     metrics = compute_financial_metrics(df)
-
-    # Generate visual insights
+    
     visuals = {
         "expense_by_category": expense_by_category(df),
         "need_vs_want": need_vs_want(df),
@@ -149,6 +140,10 @@ async def get_dashboard_data():
         "monthly_trends": monthly_trends(df)
     }
 
+    global latest_metrics, latest_visuals
+    latest_metrics = metrics
+    latest_visuals = visuals
+    
     return {
         "total_transactions": len(transactions_store),
         "metrics": metrics,
